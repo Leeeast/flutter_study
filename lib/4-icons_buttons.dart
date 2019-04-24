@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,8 +15,9 @@ class MyApp extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Icon(Icons.person),
-                SizedBox(
+                Container(
                   height: 10.0,
+                  color: Colors.blueAccent,
                 ),
                 IconButton(
                   icon: Icon(Icons.error),
@@ -27,6 +27,15 @@ class MyApp extends StatelessWidget {
                     );
                     Scaffold.of(context).showSnackBar(snackBar);
                   },
+                ),
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "RaisedButton",
+                    style: TextStyle(
+                      color: Colors.pink,
+                    ),
+                  ),
                 ),
               ],
             ),
