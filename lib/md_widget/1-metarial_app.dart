@@ -81,6 +81,61 @@ class _HomePageState extends State<HomePage> {
           });
         },
       ),
+      drawer: _buildDrawer(),
+    );
+  }
+
+  Drawer _buildDrawer() {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text('苏大成'),
+            accountEmail: Text('3461979@qq.com'),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  'https://randomuser.me/api/portraits/women/17.jpg'),
+            ),
+            otherAccountsPictures: <Widget>[
+              Icon(Icons.camera_alt),
+              Icon(Icons.volume_down),
+            ],
+            decoration: BoxDecoration(
+              color: Colors.blueGrey,
+              image: DecorationImage(
+                image: AssetImage('assets/images/mate_20_pro_3.png'),
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.payment),
+            title: Text('支付'),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('会员'),
+          ),
+          ListTile(
+            leading: Icon(Icons.message),
+            title: Text('消息'),
+          ),
+          ListTile(
+            leading: Icon(Icons.add_alarm),
+            title: Text('闹铃'),
+          ),
+          ListTile(
+            leading: Icon(Icons.airplanemode_inactive),
+            title: Text('飞行模式'),
+          ),
+          AboutListTile(
+            icon: Icon(Icons.error),
+            child: Text('关于'),
+            applicationName: '疯播',
+            applicationVersion: '1.0',
+          ),
+        ],
+      ),
     );
   }
 }
