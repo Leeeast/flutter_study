@@ -40,21 +40,32 @@ class _HomePageState extends State<HomePage>
           perspective: 0.003,
           diameterRatio: 2.0,
           itemExtent: MediaQuery.of(context).size.height * 0.6,
-          children: images.map((m)=>Card(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Stack(
-              fit: StackFit.expand,
-              alignment: Alignment.center,
-              children: <Widget>[
-                Image.asset(m,fit: BoxFit.cover,),
-              ],
-              Positioned(child: Text('勤有功戏无益',style: TextStyle(color: Colors.cyan,fontSize: 30.0),),)
-            ),
-          ),
-          ),),
+          children: images.map(
+            (m) => Card(
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        m,
+                        fit: BoxFit.cover,
+                      ),
+                      Positioned(
+                        bottom: 30.0,
+                        left: 30.0,
+                        child: Text(
+                          '勤有功戏无益',
+                          style: TextStyle(color: Colors.cyan, fontSize: 30.0),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+          ).toList()
         ),
       ),
     );
