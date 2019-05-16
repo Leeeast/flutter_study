@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:flutter_study/md_widget/2-dialog.dart';
 
-void main() => (MaterialApp(
+import 'package:flutter/material.dart';
+
+void main() => runApp(MaterialApp(
       home: HomePage(),
     ));
 
@@ -24,28 +24,30 @@ class _HomePageState extends State<HomePage>
   }
 
   var images = [
-    'images/mate_20_pro_1.png',
-    'images/mate_20_pro_2.png',
-    'images/mate_20_pro_3.png',
-    'images/mate_20_pro_3.png',
-    'images/mate_20_pro_1.png',
-    'images/mate_20_pro_2.png',
-    'images/mate_20_pro_1.png',
+    'assets/images/mate_20_pro_1.png',
+    'assets/images/mate_20_pro_2.png',
+    'assets/images/mate_20_pro_3.png',
+    'assets/images/mate_20_pro_1.png',
+    'assets/images/mate_20_pro_2.png',
+    'assets/images/mate_20_pro_3.png',
+    'assets/images/mate_20_pro_1.png',
+    'assets/images/mate_20_pro_2.png',
+    'assets/images/mate_20_pro_3.png',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ListWheelScrollView(
-          perspective: 0.003,
-          diameterRatio: 2.0,
-          itemExtent: MediaQuery.of(context).size.height * 0.6,
-          children: images.map(
-            (m) => Card(
+        body: Center(
+      child: ListWheelScrollView(
+        perspective: 0.003,
+        diameterRatio: 2.0,
+        itemExtent: MediaQuery.of(context).size.height * 0.6,
+        children: images
+            .map((m) => Card(
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
+                      borderRadius: BorderRadius.circular(20.0)),
                   child: Stack(
                     fit: StackFit.expand,
                     alignment: Alignment.center,
@@ -58,16 +60,16 @@ class _HomePageState extends State<HomePage>
                         bottom: 30.0,
                         left: 30.0,
                         child: Text(
-                          '勤有功戏无益',
-                          style: TextStyle(color: Colors.cyan, fontSize: 30.0),
+                          '天之道',
+                          style: TextStyle(
+                              color: Color(0xffffffff), fontSize: 30.0),
                         ),
                       )
                     ],
                   ),
-                ),
-          ).toList()
-        ),
+                ))
+            .toList(),
       ),
-    );
+    ));
   }
 }
