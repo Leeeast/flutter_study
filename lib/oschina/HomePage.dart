@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       NavigationIconView(
           title: _appBarTitle[3],
           iconPath: 'assets/images/ic_nav_my_normal.png',
-          activeIconPath: 'assets/images/ic_nav_news_actived.png'),
+          activeIconPath: 'assets/images/ic_nav_my_pressed.png'),
     ];
     _pages = [
       NewsListPage(),
