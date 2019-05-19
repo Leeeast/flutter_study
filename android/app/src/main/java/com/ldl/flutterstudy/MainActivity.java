@@ -1,4 +1,4 @@
-package com.ldl.flutter_les1;
+package com.ldl.flutterstudy;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

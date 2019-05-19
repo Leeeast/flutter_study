@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_study/md_widget/2-dialog.dart';
-void main()=>runApp(MaterialApp(
-  home: HomePage(),
-));
+
+void main() => runApp(MaterialApp(
+      home: HomePage(),
+    ));
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -10,23 +11,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Offset _offset = Offset.zero;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Transform(
           transform: Matrix4.identity()
-          ..setEntry(3, 2, 0.001)
-          ..rotateX(_offset.dx*0.01)
-          ..rotateY(_offset.dy*0.01)
-          ..rotateZ(_offset.dy*0.01),
+            ..setEntry(3, 2, 0.001)
+            ..rotateX(_offset.dx * 0.01)
+            ..rotateY(_offset.dy * 0.01)
+            ..rotateZ(_offset.dy * 0.01),
           child: GestureDetector(
-            onPanUpdate: (detail){
-                setState(() {
-                  _offset += detail.delta;
-                });
+            onPanUpdate: (detail) {
+              setState(() {
+                _offset += detail.delta;
+              });
             },
-            onDoubleTap: (){
+            onDoubleTap: () {
               setState(() {
                 _offset = Offset.zero;
               });
