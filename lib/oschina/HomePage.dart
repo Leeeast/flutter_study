@@ -40,7 +40,10 @@ class _HomePageState extends State<HomePage> {
         title: Text('OSChina'),
       ),
       body: Container(),
-//      bottomNavigationBar: NavigationIconView(title: null, iconPath: null, activeIconPath: null),
+      bottomNavigationBar: BottomNavigationBar(
+        items: _navigationIconViews.map((view) => view.item).toList(),
+        type: BottomNavigationBarType.fixed,
+      ),
     );
   }
 }

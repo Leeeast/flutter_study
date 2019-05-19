@@ -1,4 +1,4 @@
-name: flutter_study
+name: FlutterStudy
 description: A new Flutter application.
 
 # The following defines the version and build number for your application.
@@ -47,7 +47,7 @@ flutter:
     - assets/images/mate_20_pro_1.png
     - assets/images/mate_20_pro_2.png
     - assets/images/mate_20_pro_3.png
-    - #导航栏图标
+    #导航栏图标
     - assets/images/ic_nav_news_normal.png
     - assets/images/ic_nav_news_actived.png
     - assets/images/ic_nav_tweet_normal.png

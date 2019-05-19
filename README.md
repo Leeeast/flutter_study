@@ -1,4 +1,4 @@
-# flutter_les1
+# FlutterStudy
 
 A new Flutter application.
 
