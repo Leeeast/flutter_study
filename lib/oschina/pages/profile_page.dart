@@ -48,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
     eventBus.on<LogoutEvent>().listen((event) {
       //退出登录
+      _showUserInfo();
     });
   }
 
