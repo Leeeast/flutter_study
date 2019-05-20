@@ -4,6 +4,7 @@ import 'package:FlutterStudy/oschina/common/event_bus.dart';
 import 'package:FlutterStudy/oschina/constants/constants.dart'
     show AppColors, AppUrls;
 import 'package:FlutterStudy/oschina/pages/login_web_page.dart';
+import 'package:FlutterStudy/oschina/pages/my_message_page.dart';
 import 'package:FlutterStudy/oschina/pages/profile_detail_page.dart';
 import 'package:FlutterStudy/oschina/utils/net_utils.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +109,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 if (isLogin) {
                   switch (index) {
                     case 0:
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MyMessagePage()));
                       break;
                   }
                 } else {
