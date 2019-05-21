@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:FlutterStudy/oschina/constants/constants.dart';
+import 'package:FlutterStudy/oschina/utils/data_utils.dart';
+import 'package:FlutterStudy/oschina/utils/net_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyMessagePage extends StatefulWidget {
@@ -9,6 +14,8 @@ class MyMessagePage extends StatefulWidget {
 class _MyMessagePageState extends State<MyMessagePage> {
   List<String> _tabTitles = ['@我', '评论', '私信'];
   List messageList;
+  int curPage = 1;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -36,17 +43,97 @@ class _MyMessagePageState extends State<MyMessagePage> {
           Center(
             child: Text('暂无内容'),
           ),
-          Center(
-            child: Text('暂无内容'),
-          ),
           _buildMessageList(),
         ]),
       ),
     );
   }
-  _buildMessageList(){
-    if(messageList == null){
 
+  Future<Null> _pullToRefresh() async {
+    curPage = 1;
+    _getMessageList();
+    return null;
+  }
+
+  _buildMessageList() {
+    if (messageList == null) {
+      _getMessageList();
+      return Center(
+        child: CupertinoActivityIndicator(),
+      );
     }
+    return RefreshIndicator(
+      child: ListView.separated(
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  Image.network(messageList[index]['portrait']),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Expanded(
+                      child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '${messageList[index]['sendername']}',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${messageList[index]['pubDate']}',
+                            style: TextStyle(
+                                fontSize: 12.0, color: Color(0xffaaaaaa)),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${messageList[index]['content']}',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+          itemCount: messageList.length),
+      onRefresh: _pullToRefresh,
+    );
+  }
+
+  void _getMessageList() {
+    DataUtils.isLogin().then((isLogin) {
+      if (isLogin) {
+        DataUtils.getAccessToken().then((accessToken) {
+          print('accessToken: $accessToken');
+          Map<String, dynamic> params = Map<String, dynamic>();
+          params['dataType'] = 'json';
+          params['page'] = curPage;
+          params['pageSize'] = 10;
+          params['access_token'] = accessToken;
+          NetUtils.get(AppUrls.MESSAGE_LIST, params).then((result) {
+            print('MESSAGE_LIST: $result');
+            if (result != null && result.isNotEmpty) {
+              Map<String, dynamic> map = json.decode(result);
+              // ignore: unnecessary_statements
+              var _messageList = map['messageList'];
+              setState(() {
+                messageList = _messageList;
+              });
+            }
+          });
+        });
+      }
+    });
   }
 }
