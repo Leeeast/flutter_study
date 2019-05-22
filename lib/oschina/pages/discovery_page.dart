@@ -1,4 +1,5 @@
 import 'package:FlutterStudy/oschina/pages/common_web_page.dart';
+import 'package:FlutterStudy/oschina/pages/shake_page.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 
@@ -34,6 +35,9 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
       case '扫一扫':
         scan();
         break;
+      case '摇一摇':
+        _navToPage(ShakePage());
+        break;
     }
   }
 
@@ -51,6 +55,8 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
               )));
     }
   }
+  void _navToPage(Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
 
   @override
   Widget build(BuildContext context) {
