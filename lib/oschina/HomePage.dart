@@ -47,6 +47,10 @@ class _HomePageState extends State<HomePage> {
       ProfilePage(),
     ];
     _pageController = PageController(initialPage: _currentIndex);
+    _pageController.addListener(() {
+      var page = _pageController.page;
+      print('page:$page');
+    });
   }
 
   @override

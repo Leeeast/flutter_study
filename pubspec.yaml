@@ -66,6 +66,8 @@ flutter:
     - assets/images/cover_img.jpg
     #用户默认头像
     - assets/images/ic_avatar_default.png
+    #摇一摇
+    - assets/images/shake.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
