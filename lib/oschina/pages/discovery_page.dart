@@ -1,4 +1,6 @@
+import 'package:FlutterStudy/oschina/pages/common_web_page.dart';
 import 'package:flutter/material.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 
 class DiscoveryPage extends StatefulWidget {
   @override
@@ -24,6 +26,32 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
     }
   ];
 
+  void _handleItemClick(String title) {
+    switch (title) {
+      case '开源众包':
+        _navToWebPage(title, 'https://zb.oschina.net/');
+        break;
+      case '扫一扫':
+        scan();
+        break;
+    }
+  }
+
+  Future scan() async {
+    String barcode = await BarcodeScanner.scan();
+    print('barcode:$barcode');
+  }
+
+  void _navToWebPage(String title, url) {
+    if (title != null && url != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => CommonWebPage(
+                title: title,
+                url: url,
+              )));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -41,7 +69,10 @@ class _DiscoveryPageState extends State<DiscoveryPage> {
               shrinkWrap: true,
               itemBuilder: (context, mapIndex) {
                 return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      _handleItemClick(
+                          blocks[blockIndex].keys.elementAt(mapIndex));
+                    },
                     child: Container(
                       height: 60.0,
                       alignment: Alignment.center,
