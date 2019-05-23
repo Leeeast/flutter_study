@@ -6,6 +6,7 @@ import 'package:FlutterStudy/oschina/pages/login_web_page.dart';
 import 'package:FlutterStudy/oschina/pages/publish_tweet_page.dart';
 import 'package:FlutterStudy/oschina/utils/data_utils.dart';
 import 'package:FlutterStudy/oschina/utils/net_utils.dart';
+import 'package:FlutterStudy/oschina/widgets/news_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -45,6 +46,7 @@ class _NewsListPageState extends State<NewsListPage> {
       ..addListener(() {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
+          curPage++;
           getNewsList(true);
         }
       });
@@ -59,7 +61,7 @@ class _NewsListPageState extends State<NewsListPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLogin) {
+    if (!isLogin) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -100,6 +102,30 @@ class _NewsListPageState extends State<NewsListPage> {
       getNewsList(false);
       return CupertinoActivityIndicator();
     }
+    return ListView.builder(
+        itemCount: newsList.length + 1,
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          if (index == newsList.length) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('加载中...'),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    CupertinoActivityIndicator()
+                  ],
+                ),
+              ),
+            );
+          }
+          return NewsListItem(newsList: newsList[index]);
+        });
   }
 
   getNewsList(bool isLoadMore) async {
@@ -109,6 +135,7 @@ class _NewsListPageState extends State<NewsListPage> {
           if (accessToken == null && accessToken.isEmpty) {
             return;
           }
+          print('curPage:$curPage');
           Map<String, dynamic> params = Map<String, dynamic>();
           params['access_token'] = accessToken;
           params['catalog'] = 1;
