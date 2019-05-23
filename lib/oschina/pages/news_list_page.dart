@@ -116,7 +116,7 @@ class _NewsListPageState extends State<NewsListPage> {
                   children: <Widget>[
                     Text('加载中...'),
                     SizedBox(
-                      width: 15.0,
+                      width: 10.0,
                     ),
                     CupertinoActivityIndicator()
                   ],
