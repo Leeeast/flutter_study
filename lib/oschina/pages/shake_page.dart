@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:FlutterStudy/oschina/constants/constants.dart' show AppColors;
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
+import 'dart:async';
+import 'package:vibration/vibration.dart';
 
 class ShakePage extends StatefulWidget {
   @override
@@ -8,18 +12,43 @@ class ShakePage extends StatefulWidget {
 }
 
 class _ShakePageState extends State<ShakePage> {
-  bool isShake = false;
+  bool isShaked = false;
   int _currentIndex = 0;
+  StreamSubscription _streamSubscription;
+  static const int SHAKE_TIMEOUT = 500;
+  static const double SHAKE_SHRESHOLD = 3.25;
+  var _lastTime = 0;
 
   @override
   void initState() {
-    accelerometerEvents.listen((AccelerometerEvent event) {
-      // Do something with the event.
-    });
-    gyroscopeEvents.listen((GyroscopeEvent event) {
-      // Do something with the event.
+    _streamSubscription =
+        accelerometerEvents.listen((AccelerometerEvent event) {
+      var now = DateTime.now().millisecondsSinceEpoch;
+      if ((now - _lastTime) > SHAKE_TIMEOUT) {
+        var x = event.x;
+        var y = event.y;
+        var z = event.z;
+        double acce = sqrt(x * x + y * y + z * z) - 9.8;
+        if (acce > SHAKE_SHRESHOLD) {
+          //手机晃动了
+          Vibration.vibrate();
+          _lastTime = now;
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            isShaked = true;
+          });
+        }
+      }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -44,7 +73,9 @@ class _ShakePageState extends State<ShakePage> {
             SizedBox(
               height: 10.0,
             ),
-            Text('摇一摇获取礼品'),
+            Text(isShaked
+                ? _currentIndex == 0 ? '活动已经结束' : "有一条资讯还在路上"
+                : _currentIndex == 0 ? '摇一摇获取礼品' : '摇一摇获取资讯'),
           ],
         ),
       ),
@@ -60,6 +91,7 @@ class _ShakePageState extends State<ShakePage> {
           if (!mounted) return;
           setState(() {
             _currentIndex = index;
+            isShaked = false;
           });
         },
       ),
