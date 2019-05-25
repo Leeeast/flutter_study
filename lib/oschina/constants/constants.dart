@@ -5,8 +5,8 @@ abstract class AppColors {
 }
 
 abstract class AppInfos {
-  static const String CLIENT_ID = "NsGUZ6QLeolZXLqqGpn3";
-  static const String CLIENT_SECRET = "fwOBqIojmRGMpgsCZqFJD1FObqZBVhnH";
+  static const String CLIENT_ID = "GerucyB2ZXgGqhSKiv8Z";
+  static const String CLIENT_SECRET = "UTExLqXKVOM1J7HSzaFuNe0rel6TpE6D";
   static const String REDIRECT_URI = "http://live.sinashow.com";
 }
 
