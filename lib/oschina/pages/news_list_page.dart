@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:FlutterStudy/oschina/common/event_bus.dart';
 import 'package:FlutterStudy/oschina/constants/constants.dart' show AppUrls;
 import 'package:FlutterStudy/oschina/pages/login_web_page.dart';
-import 'package:FlutterStudy/oschina/pages/publish_tweet_page.dart';
 import 'package:FlutterStudy/oschina/utils/data_utils.dart';
 import 'package:FlutterStudy/oschina/utils/net_utils.dart';
 import 'package:FlutterStudy/oschina/widgets/news_list_item.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class NewsListPage extends StatefulWidget {
   @override
@@ -114,11 +113,11 @@ class _NewsListPageState extends State<NewsListPage> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('加载中...'),
+                    CupertinoActivityIndicator(),
                     SizedBox(
                       width: 10.0,
                     ),
-                    CupertinoActivityIndicator()
+                    Text('加载中...')
                   ],
                 ),
               ),

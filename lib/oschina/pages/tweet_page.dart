@@ -16,24 +16,56 @@ class TweetPage extends StatefulWidget {
 
 class _TweetPageState extends State<TweetPage>
     with SingleTickerProviderStateMixin {
-  List _tabTitles = ['最新', '热门'];
+  List _tabTitles = ['最新', '热门', '我的'];
   List latestTweetList;
   List hotTweetList;
+  List myTweetList;
+  int latestCurPage = 1;
+  int hotCurPage = 1;
+  int myCurPage = 1;
   int curPage = 1;
   ScrollController _controller = ScrollController();
   TabController _tabController;
   bool isLogin = false;
+  int user = 0;
+  int myUserId = 0;
+  bool noMoreData = false;
 
   @override
   void initState() {
     super.initState();
+    DataUtils.getUserInfo().then((userInfo) {
+      myUserId = userInfo.id;
+    });
     _tabController = TabController(length: _tabTitles.length, vsync: this);
+    _tabController.addListener(() {
+      switch (_tabTitles[_tabController.index]) {
+        case '最新':
+          user = 0;
+          break;
+        case '热门':
+          user = -1;
+          break;
+        case '我的':
+          user = myUserId;
+          break;
+      }
+    });
     _controller.addListener(() {
       var maxScroll = _controller.position.maxScrollExtent;
       var pixels = _controller.position.pixels;
       if (maxScroll == pixels) {
-        curPage++;
-        getTweetList(isLoadMore: false, isHot: false);
+        if (user == 0) {
+          latestCurPage++;
+          curPage = latestCurPage;
+        } else if (user == -1) {
+          hotCurPage++;
+          curPage = hotCurPage;
+        } else {
+          myCurPage++;
+          curPage = myCurPage;
+        }
+        getTweetList(isLoadMore: true, user: user);
       }
     });
     DataUtils.isLogin().then((isLogin) {
@@ -47,14 +79,14 @@ class _TweetPageState extends State<TweetPage>
       setState(() {
         this.isLogin = isLogin;
       });
-      getTweetList(isLoadMore: false, isHot: false);
+      getTweetList(isLoadMore: false, user: user);
     });
     eventBus.on<LogoutEvent>().listen((event) {
 //      _showUerInfo();
     });
   }
 
-  getTweetList({bool isLoadMore, bool isHot}) {
+  getTweetList({bool isLoadMore, int user}) {
     DataUtils.isLogin().then((isLogin) {
       if (isLogin) {
         DataUtils.getAccessToken().then((accessToken) {
@@ -63,31 +95,47 @@ class _TweetPageState extends State<TweetPage>
           }
           Map<String, dynamic> params = Map<String, dynamic>();
           params['access_token'] = accessToken;
-          params['user'] = isHot ? -1 : 0;
+          params['user'] = user;
           params['page'] = curPage;
           params['pageSize'] = 10;
           params['dataType'] = 'json';
-          NetUtils.get(AppUrls.NEWS_LIST, params).then((data) {
+          NetUtils.get(AppUrls.TWEET_LIST, params).then((data) {
             print('TWEET_LIST: $data');
             if (data != null && data.isNotEmpty) {
-              Map<String, dynamic> map = json.decode(data);
-              List _tweetList = map['tweetlist'];
+              List _tweetList;
+              try {
+                Map<String, dynamic> map = json.decode(data);
+                _tweetList = map['tweetlist'];
+              } catch (e) {
+                print('TWEET_LIST: $e');
+              }
               if (!mounted) return;
-              setState(() {
-                if (isLoadMore) {
-                  if (isHot) {
-                    hotTweetList.addAll(_tweetList);
+              if (_tweetList == null || _tweetList.isEmpty) {
+                setState(() {
+                  noMoreData = true;
+                });
+              } else {
+                setState(() {
+                  noMoreData = false;
+                  if (isLoadMore) {
+                    if (user == 0) {
+                      latestTweetList.addAll(_tweetList);
+                    } else if (user == -1) {
+                      hotTweetList.addAll(_tweetList);
+                    } else {
+                      myTweetList.addAll(_tweetList);
+                    }
                   } else {
-                    latestTweetList.addAll(_tweetList);
+                    if (user == 0) {
+                      latestTweetList = _tweetList;
+                    } else if (user == -1) {
+                      hotTweetList = _tweetList;
+                    } else {
+                      myTweetList = _tweetList;
+                    }
                   }
-                } else {
-                  if (isHot) {
-                    hotTweetList = _tweetList;
-                  } else {
-                    latestTweetList = _tweetList;
-                  }
-                }
-              });
+                });
+              }
             }
           });
         });
@@ -146,29 +194,50 @@ class _TweetPageState extends State<TweetPage>
         ),
         Expanded(
             child: TabBarView(
-                controller: _tabController,
-                children: [_buildLatestTweetList(), _buildHotTweetList()]))
+          controller: _tabController,
+          children: [
+            _buildTweetList(0),
+            _buildTweetList(-1),
+            _buildTweetList(myUserId)
+          ],
+        ))
       ],
     );
   }
 
-  Future<Null> _pullToRefresh() async {
+  Future<int> _pullToRefresh() async {
     curPage = 1;
-    getTweetList(isLoadMore: false, isHot: false);
+    getTweetList(isLoadMore: false, user: user);
     return null;
   }
 
-  Widget _buildLatestTweetList() {
-    if (latestTweetList == null) {
-      getTweetList(isLoadMore: false, isHot: false);
+  Widget _buildTweetList(int user) {
+    var tweetList =
+        user == 0 ? latestTweetList : user == -1 ? hotTweetList : myTweetList;
+    if (tweetList == null) {
+      getTweetList(isLoadMore: false, user: user);
       return Center(child: new CircularProgressIndicator());
     }
+    var tweetListLength = user == 0
+        ? latestTweetList.length
+        : user == -1 ? hotTweetList.length : myTweetList.length;
     return RefreshIndicator(
       onRefresh: _pullToRefresh,
       child: ListView.separated(
         controller: _controller,
         itemBuilder: (BuildContext context, int index) {
-          if (index == latestTweetList.length) {
+          var tweetListLength = user == 0
+              ? latestTweetList.length
+              : user == -1 ? hotTweetList.length : myTweetList.length;
+          if (index == tweetListLength) {
+            if (noMoreData) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Text('已经到底了'),
+                ),
+              );
+            }
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: Center(
@@ -184,7 +253,10 @@ class _TweetPageState extends State<TweetPage>
               )),
             );
           }
-          return TweetListItem(tweetData: latestTweetList[index]);
+          Map<String, dynamic> tweet = user == 0
+              ? latestTweetList[index]
+              : user == -1 ? hotTweetList[index] : myTweetList[index];
+          return TweetListItem(tweetData: tweet);
         },
         separatorBuilder: (context, index) {
           return Container(
@@ -192,36 +264,8 @@ class _TweetPageState extends State<TweetPage>
             color: Colors.grey[200],
           );
         },
-        itemCount: latestTweetList.length + 1,
+        itemCount: tweetListLength + 1,
       ),
     );
-  }
-
-  Widget _buildHotTweetList() {
-    if (hotTweetList == null) {
-      getTweetList(isLoadMore: false, isHot: true);
-      return Center(
-        child: CupertinoActivityIndicator(),
-      );
-    }
-
-    return ListView.separated(
-        itemBuilder: (context, index) {
-          if (index == hotTweetList.length) {
-            return Container(
-              padding: const EdgeInsets.all(10.0),
-              color: Color(0xaaaaaaaa),
-              child: Center(child: Text('没有更多数据了')),
-            );
-          }
-          return TweetListItem(tweetData: hotTweetList[index]);
-        },
-        separatorBuilder: (context, index) {
-          return Container(
-            height: 10.0,
-            color: Color(0xaaaaaaaa),
-          );
-        },
-        itemCount: hotTweetList.length + 1);
   }
 }
