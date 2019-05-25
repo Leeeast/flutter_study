@@ -7,6 +7,7 @@ import 'package:FlutterStudy/oschina/utils/net_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginWebPage extends StatefulWidget {
   @override
@@ -45,8 +46,19 @@ class _LoginWebPageState extends State<LoginWebPage> {
           if (data != null) {
             Map<String, dynamic> map = json.decode(data);
             if (map != null && map.isNotEmpty) {
-              //保存token等信息
-              DataUtils.saveLoginInfo(map);
+              if (map['error'] != '404') {
+                //保存token等信息
+                DataUtils.saveLoginInfo(map);
+              } else {
+                Fluttertoast.showToast(
+                    msg: "登录失败",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.black54,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
               //弹出当前路由，并返回refresh通知我的界面刷新数据
               Navigator.pop(context, 'refresh');
             }

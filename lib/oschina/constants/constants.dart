@@ -28,4 +28,7 @@ abstract class AppUrls {
   static const String NEWS_LIST = HOST + '/action/openapi/news_list';
   //资讯详情
   static const String NEWS_DETAIL = HOST + '/action/openapi/news_detail';
+  //动弹
+  static const String TWEET_LIST = HOST + '/action/openapi/tweet_list';
+  static const String TWEET_PUB = HOST + '/action/openapi/tweet_pub';
 }
