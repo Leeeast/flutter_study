@@ -140,7 +140,7 @@ class _NewsListPageState extends State<NewsListPage> {
           params['access_token'] = accessToken;
           params['catalog'] = 1;
           params['page'] = curPage;
-          params['pageSize'] = 10;
+          params['pageSize'] = 20;
           params['dataType'] = 'json';
           NetUtils.get(AppUrls.NEWS_LIST, params).then((data) {
             print('NEWS_LIST: $data');

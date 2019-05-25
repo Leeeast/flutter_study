@@ -20,10 +20,12 @@ abstract class AppUrls {
   static const String OAUTH2_TOKEN = HOST + '/action/openapi/token';
 
   //获取用户信息
-  static const String OPENAPI_USER = HOST +  '/action/openapi/user';
+  static const String OPENAPI_USER = HOST + '/action/openapi/user';
 
   static const String MY_INFORMATION = HOST + '/action/openapi/my_information';
   static const String MESSAGE_LIST = HOST + '/action/openapi/message_list';
   //资讯列表
   static const String NEWS_LIST = HOST + '/action/openapi/news_list';
+  //资讯详情
+  static const String NEWS_DETAIL = HOST + '/action/openapi/news_detail';
 }
