@@ -92,6 +92,7 @@ class _LoginWebPageState extends State<LoginWebPage> {
     }
     //
     return WebviewScaffold(
+      resizeToAvoidBottomInset: true,
       url: AppUrls.OAUTH2_AUTHORIZE +
           '?response_type=code&client_id=' +
           AppInfos.CLIENT_ID +
