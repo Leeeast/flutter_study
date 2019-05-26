@@ -116,7 +116,11 @@ class _TweetPageState extends State<TweetPage>
                 });
               } else {
                 setState(() {
-                  noMoreData = false;
+                  if (_tweetList.length < 10) {
+                    noMoreData = true;
+                  } else {
+                    noMoreData = false;
+                  }
                   if (isLoadMore) {
                     if (user == 0) {
                       latestTweetList.addAll(_tweetList);

@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:FlutterStudy/oschina/constants/constants.dart';
 import 'package:FlutterStudy/oschina/utils/data_utils.dart';
@@ -73,7 +73,7 @@ class _PublishTweetPageState extends State<PublishTweetPage> {
                 hintStyle: TextStyle(color: Color(0xaaaaaaaa)),
                 border: OutlineInputBorder(
                     borderRadius:
-                    BorderRadius.all(const Radius.circular(10.0))),
+                        BorderRadius.all(const Radius.circular(10.0))),
               ),
               maxLines: 6,
               maxLength: 150,
@@ -137,7 +137,7 @@ class _PublishTweetPageState extends State<PublishTweetPage> {
     print('动弹内容：$tweetContent');
 
     var multipartRequest =
-    http.MultipartRequest('POST', Uri.parse(AppUrls.TWEET_PUB));
+        http.MultipartRequest('POST', Uri.parse(AppUrls.TWEET_PUB));
     multipartRequest.fields.addAll(params);
     if (fileList.length > 0) {
       for (File file in fileList) {
@@ -145,38 +145,35 @@ class _PublishTweetPageState extends State<PublishTweetPage> {
         var length = await file.length();
         print('${file.path}');
         var fileName = file.path.substring(file.path.lastIndexOf('/') + 1);
-        multipartRequest.files.add(http.MultipartFile(
-            'img',
-            stream,
-            length, filename: fileName;
-        ));
+        multipartRequest.files
+            .add(http.MultipartFile('img', stream, length, filename: fileName));
       }
-      setState(() {
-        isLoading = true;
-      });
-      var streamResponse = await multipartRequest.send();
-      streamResponse.stream.transform(utf8.decoder).listen((response) {
-        print('response: $response');
-        setState(() {
-          isLoading = false;
-        });
-        if (response != null) {
-          var decode = json.decode(response);
-          var errorCode = decode['error'];
-          if (mounted) {
-            setState(() {
-              if (errorCode != null && errorCode == '200') {
-                fileList.clear();
-                _controller.clear();
-                _showSnackBar(context, '发布成功!');
-              } else {
-                _showSnackBar(context, '发布失败: ${decode['error_description']}');
-              }
-            });
-          }
-        }
-      });
     }
+    setState(() {
+      isLoading = true;
+    });
+    var streamResponse = await multipartRequest.send();
+    streamResponse.stream.transform(utf8.decoder).listen((response) {
+      print('response: $response');
+      setState(() {
+        isLoading = false;
+      });
+      if (response != null) {
+        var decode = json.decode(response);
+        var errorCode = decode['error'];
+        if (mounted) {
+          setState(() {
+            if (errorCode != null && errorCode == '200') {
+              fileList.clear();
+              _controller.clear();
+              _showSnackBar(context, '发布成功!');
+            } else {
+              _showSnackBar(context, '发布失败: ${decode['error_description']}');
+            }
+          });
+        }
+      }
+    });
   }
 
   void _showSnackBar(BuildContext context, String message) {
