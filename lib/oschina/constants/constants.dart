@@ -5,8 +5,8 @@ abstract class AppColors {
 }
 
 abstract class AppInfos {
-  static const String CLIENT_ID = "NsGUZ6QLeolZXLqqGpn3";
-  static const String CLIENT_SECRET = "fwOBqIojmRGMpgsCZqFJD1FObqZBVhnH";
+  static const String CLIENT_ID = "GerucyB2ZXgGqhSKiv8Z";
+  static const String CLIENT_SECRET = "UTExLqXKVOM1J7HSzaFuNe0rel6TpE6D";
   static const String REDIRECT_URI = "http://live.sinashow.com";
 }
 
@@ -20,10 +20,15 @@ abstract class AppUrls {
   static const String OAUTH2_TOKEN = HOST + '/action/openapi/token';
 
   //获取用户信息
-  static const String OPENAPI_USER = HOST +  '/action/openapi/user';
+  static const String OPENAPI_USER = HOST + '/action/openapi/user';
 
   static const String MY_INFORMATION = HOST + '/action/openapi/my_information';
   static const String MESSAGE_LIST = HOST + '/action/openapi/message_list';
   //资讯列表
   static const String NEWS_LIST = HOST + '/action/openapi/news_list';
+  //资讯详情
+  static const String NEWS_DETAIL = HOST + '/action/openapi/news_detail';
+  //动弹
+  static const String TWEET_LIST = HOST + '/action/openapi/tweet_list';
+  static const String TWEET_PUB = HOST + '/action/openapi/tweet_pub';
 }
